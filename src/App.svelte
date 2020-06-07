@@ -5,9 +5,9 @@
   import DefinitionView from "./Views/DefinitionView.svelte";
   import SlangView from "./Views/SlangView.svelte";
 
-  let currentTab = "translation";
+  let currentTab = "Slang";
 
-  var targetWords;
+  var targetWords = "api";
 
 </script>
 
@@ -20,7 +20,7 @@
 </style>
 
 <main>
-  <TopNav on:tabChange={(e) => currentTab = e.detail.value} />
+  <TopNav defaultTab={currentTab} on:tabChange={(e) => currentTab = e.detail.value} />
   {#if currentTab == "translation"}
      <TranslationView bind:targetWords={targetWords} />
   {:else if  currentTab == "definition"}

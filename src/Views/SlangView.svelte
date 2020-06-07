@@ -1,19 +1,22 @@
 <script>
-  import { translate } from "../API/google-translate";
-  import DropdownMenu from "../Components/DropdownMenu.svelte";
+  import { onMount } from "svelte";
+  import { findSlangDefinition } from "../API/urban-dictionary.js";
+  import moment from "moment";
 
-  let languages = ["Turkish", "English"];
-
-  export let word = "test";
   export let targetWords;
-  let translationResult;
+  let slangResult;
 
-  let showSimilarWordsForTranslations = false;
+  onMount(async () => {
+    if (targetWords) {
+      await findSlangDefinitionOfWords();
+    }
+  });
 
-  async function translateWords(e) {
-    targetWords = e.target.value;
-    translationResult = await translate(targetWords, { from: "en", to: "tr" });
-    console.log(translationResult);
+  async function findSlangDefinitionOfWords(e) {
+    if (targetWords != "") {
+      slangResult = await findSlangDefinition(targetWords);
+      console.log(slangResult);
+    }
   }
 </script>
 
@@ -38,84 +41,87 @@
     }
   }
 
-  .translate-from {
-    justify-self: right;
-  }
-
-  #translations-of {
+  #slang-of {
     color: white;
+    padding: 5px;
     background-color: rgb(41, 41, 41);
   }
 
-  .translate-result-area {
+  .slang-result-area {
     display: grid;
     color: rgb(167, 167, 167);
     background-color: rgb(66, 66, 66);
 
-    .translate-result-area-header {
-      color: rgb(255, 221, 87);
-    }
-
-    .translate-result-line {
+    .slang-result-container {
       display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 1fr;
 
-      .translation-word-of-line {
-        color: white;
+      .slang-result-target-word {
+        color: rgb(255, 221, 87);
+      }
+
+      .slang-result-content {
+        display: grid;
+
+        font-size: small;
+
+        .slang-result-definition {
+          color: white;
+        }
+        .slang-result-example {
+          color: white;
+          font-style: italic;
+        }
+        .slang-votes {
+          display: flex;
+          .slang-vote {
+            padding: 10px;
+          }
+        }
       }
     }
   }
 </style>
 
-<top-bar>
-  <DropdownMenu placeholder="Translate To" items={languages} />
-  <button class="button is-link">
-    <span class="icon is-medium">
-      <i class="fas fa-exchange-alt" />
-    </span>
-  </button>
-  <DropdownMenu
-    justifySelf="right"
-    placeholder="Translate From"
-    items={languages} />
-</top-bar>
-
 <textarea
   bind:value={targetWords}
-  on:change={translateWords}
+  on:input={findSlangDefinitionOfWords}
   class="textarea has-fixed-size"
   placeholder="Translate"
   name="main-text-area"
   id="main-text-area"
   cols="30"
   rows="5" />
-{#if translationResult != null}
-  {#if translationResult.target != null}
-    <div id="translations-of">Translations of {targetWords}</div>
-  {/if}
-  <div class="translate-result-area">
-    <span class="translate-result-area-header" style="font-weight: bold;">
-      most common
-    </span>
-    <span style="font-weight: bold; color:white;">
-      {translationResult.translation}
-    </span>
-  </div>
-  {#each translationResult.translations as translation}
-    <div class="translate-result-area">
-      <span class="translate-result-area-header">{translation.type}</span>
-      {#each translation.content as line}
-        <div class="translate-result-line">
-          <div>
-            <div class="frequency-bar" />
-            <span class="translation-word-of-line">{line.word}</span>
-          </div>
-          {#if showSimilarWordsForTranslations}
-            <div>{line.meaning.join(', ')}</div>
-          {/if}
+{#if slangResult != null}
+  <div id="slang-of">Slang result of {targetWords}</div>
+  {#each slangResult as slang}
+    <div class="slang-result-area">
+      <div class="slang-result-container">
+        <div class="slang-result-target-word">
+          <span>{slang.word}</span>
         </div>
-      {/each}
+        <div class="slang-result-content">
+          <p class="slang-result-definition">{slang.definition}</p>
+          <span>e.g.</span>
+          <p class="slang-result-example">{slang.example}</p>
+          <span class="slang-autor">
+            by {slang.author} {moment(slang.written_on).format('MMM DD, YYYY')}
+          </span>
+          <div class="slang-votes">
+            <div class="slang-vote">
+              <span class="icon is-small">
+                <i class="fas fa-thumbs-up" />
+              </span>
+              <span>{slang.thumbs_up}</span>
+            </div>
+            <div class="slang-vote">
+              <span class="icon is-small">
+                <i class="fas fa-thumbs-down" />
+              </span>
+              <span>{slang.thumbs_down}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   {/each}
 {/if}

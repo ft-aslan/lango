@@ -1,5 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
+
+  export let defaultTab;
+
+  onMount(async () => {
+    if (defaultTab != null) {
+      selectTab(defaultTab);
+    }
+  });
 
   let isTranslationSelected = true;
   let isDefinitionSelected;
@@ -9,7 +18,7 @@
 
   function tabChanged(tab) {
     dispatch("tabChange", {
-      value: tab
+      value: tab,
     });
   }
 
