@@ -2,6 +2,7 @@
   "include": ["src/**/*", "tsconfig.json"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
+    "allowSyntheticDefaultImports":true,
     "moduleResolution": "node",
     "target": "es2017",
     "types": ["svelte"]
