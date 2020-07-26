@@ -3,21 +3,15 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import preprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
 
-import preprocess from 'svelte-preprocess';
 
-// // Your Preprocess which compiles source code to sass
-// const preprocess = autoPreprocess({ 
-//     scss: { includePaths: ['src'] },
-//     postcss: {
-//         plugins: [ require('autoprefixer') ],
-//     },
-// });
 
 export default {
-	input: 'src/svelte.js',
+	input: ['src/svelte.ts'],
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -46,7 +40,8 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-
+		typescript({ sourceMap: !production }),
+		
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),

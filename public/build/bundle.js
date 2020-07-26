@@ -483,44 +483,44 @@ var app = (function () {
     			span5 = element("span");
     			span5.textContent = "Slang";
     			attr_dev(i0, "class", "fas fa-language");
-    			add_location(i0, file, 53, 12, 1248);
+    			add_location(i0, file, 49, 12, 1290);
     			attr_dev(span0, "class", "icon is-small");
-    			add_location(span0, file, 52, 10, 1207);
-    			add_location(span1, file, 55, 10, 1306);
+    			add_location(span0, file, 48, 10, 1249);
+    			add_location(span1, file, 51, 10, 1348);
     			attr_dev(button0, "class", "button is-dark");
     			toggle_class(button0, "is-warning", /*isTranslationSelected*/ ctx[0]);
     			toggle_class(button0, "is-selected", /*isTranslationSelected*/ ctx[0]);
-    			add_location(button0, file, 47, 8, 1000);
+    			add_location(button0, file, 43, 8, 1042);
     			attr_dev(p0, "class", "control");
-    			add_location(p0, file, 46, 6, 972);
+    			add_location(p0, file, 42, 6, 1014);
     			attr_dev(i1, "class", "fas fa-book");
-    			add_location(i1, file, 65, 12, 1639);
+    			add_location(i1, file, 61, 12, 1681);
     			attr_dev(span2, "class", "icon is-small");
-    			add_location(span2, file, 64, 10, 1598);
-    			add_location(span3, file, 67, 10, 1693);
+    			add_location(span2, file, 60, 10, 1640);
+    			add_location(span3, file, 63, 10, 1735);
     			attr_dev(button1, "class", "button is-dark");
     			toggle_class(button1, "is-warning", /*isDefinitionSelected*/ ctx[1]);
     			toggle_class(button1, "is-selected", /*isDefinitionSelected*/ ctx[1]);
-    			add_location(button1, file, 59, 8, 1394);
+    			add_location(button1, file, 55, 8, 1436);
     			attr_dev(p1, "class", "control");
-    			add_location(p1, file, 58, 6, 1366);
+    			add_location(p1, file, 54, 6, 1408);
     			attr_dev(i2, "class", "fab fa-stripe-s");
-    			add_location(i2, file, 77, 12, 2010);
+    			add_location(i2, file, 73, 12, 2052);
     			attr_dev(span4, "class", "icon is-small");
-    			add_location(span4, file, 76, 10, 1969);
-    			add_location(span5, file, 79, 10, 2068);
+    			add_location(span4, file, 72, 10, 2011);
+    			add_location(span5, file, 75, 10, 2110);
     			attr_dev(button2, "class", "button is-dark");
     			toggle_class(button2, "is-warning", /*isSlangSelected*/ ctx[2]);
     			toggle_class(button2, "is-selected", /*isSlangSelected*/ ctx[2]);
-    			add_location(button2, file, 71, 8, 1780);
+    			add_location(button2, file, 67, 8, 1822);
     			attr_dev(p2, "class", "control");
-    			add_location(p2, file, 70, 6, 1752);
+    			add_location(p2, file, 66, 6, 1794);
     			attr_dev(div, "class", "field has-addons");
-    			add_location(div, file, 45, 4, 935);
+    			add_location(div, file, 41, 4, 977);
     			set_custom_element_data(nav_top, "class", "svelte-1d7i6wq");
-    			add_location(nav_top, file, 44, 2, 921);
+    			add_location(nav_top, file, 40, 2, 963);
     			attr_dev(nav, "class", "svelte-1d7i6wq");
-    			add_location(nav, file, 43, 0, 913);
+    			add_location(nav, file, 39, 0, 955);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2915,7 +2915,7 @@ var app = (function () {
     async function translate(text, opts, justDefinition) {
         try {
             const url = 'https://translate.google.com/translate_a/single';
-            const data = {
+            let data = {
                 client: 'gtx',
                 sl: opts.from,
                 tl: opts.to,
@@ -2926,7 +2926,8 @@ var app = (function () {
                 q: text,
             };
             if (!justDefinition) {
-                data.dt.push(['at', 'bd', 'ex', 'ld', 'qca', 'rw', 'rm', 'ss', 't']);
+                let allOtherOptions = ['at', 'bd', 'ex', 'ld', 'qca', 'rw', 'rm', 'ss', 't'];
+                data.dt.concat(allOtherOptions);
             }
             console.log(url + '?' + lib.stringify(data, { indices: false }));
             const res = await axios$1({
@@ -2934,24 +2935,23 @@ var app = (function () {
                 url: url + '?' + lib.stringify(data, { indices: false })
             });
             if (justDefinition) {
-                return remapJustDefinition(res.data)
+                return remapJustDefinition(res.data);
             }
-            else return remapTranslate(res.data)
-        } catch (err) {
+            else
+                return remapTranslate(res.data);
+        }
+        catch (err) {
             console.error(err);
-            return null
+            return null;
         }
     }
     function remapJustDefinition(data) {
-        let obj = {};
-
+        let obj = { definitions };
         if (data[12]) {
             var definitions = [];
-
             for (let i = 0; i < data[12].length; i++) {
                 let type = data[12][i][0];
                 let content = [];
-
                 for (let j = 0; j < data[12][i][1].length; j++) {
                     let obj = {
                         phrase: data[12][i][1][j][0],
@@ -2967,51 +2967,32 @@ var app = (function () {
             }
             obj.definitions = definitions;
         }
-
-        return obj
+        return obj;
     }
     function remapTranslate(data) {
-        if (global.showResponse) console.log(data);
-
-        var obj = {
-            correction: {
-                language: {
-                    didYouMean: false,
-                    iso: ''
-                },
-                text: {
-                    autoCorrected: false,
-                    value: '',
-                    didYouMean: false
-                }
-            }
-        };
-
+        var obj;
         if (data[2] === data[8][0][0]) {
             obj.correction.language.iso = data[2];
-        } else {
+        }
+        else {
             obj.correction.language.didYouMean = true;
             obj.correction.language.iso = data[8][0][0];
         }
-
         if (data[7] && data[7][0]) {
-
             var youMean = data[7][1];
             obj.correction.text.value = youMean;
-
             if (data[7][5] === true) {
                 obj.correction.text.autoCorrected = true;
-            } else {
+            }
+            else {
                 obj.correction.text.didYouMean = true;
             }
         }
-
         if (data[0]) {
             let length = data[0].length;
             let input = [];
             let translation = [];
             obj.target = data[0][0][1] || null;
-
             for (let i = 0; i < length; i++) {
                 if (data[0][i][1] !== null) {
                     input.push(data[0][i][1]);
@@ -3022,36 +3003,30 @@ var app = (function () {
             obj.text = input.join('');
             obj.translation = translation.join('');
         }
-
         if (data[0][1]) {
             obj.pronunciation = data[0][1][3];
         }
-
         if (data[1]) {
             var translations = [];
-
             for (let i = 0; i < data[1].length; i++) {
                 let type = data[1][i][0];
                 let content = [];
-
                 for (let j = 0; j < data[1][i][2].length; j++) {
                     var rating = data[1][i][2][j][3];
                     var bar;
-
                     switch (true) {
                         case (rating > 0.05):
                             bar = 'common';
-                            break
+                            break;
                         case (rating < 0.05 && rating > 0.002):
                             bar = 'uncommon';
-                            break
+                            break;
                         case (rating < 0.002):
                             bar = 'rare';
-                            break
+                            break;
                         case (rating === undefined):
                             bar = 'rare';
                     }
-
                     let obj = {
                         article: data[1][i][2][j][4] || null,
                         word: data[1][i][2][j][0],
@@ -3059,28 +3034,21 @@ var app = (function () {
                         rating,
                         bar
                     };
-
                     content.push(obj);
                 }
-
                 let section = {
                     type,
                     content
                 };
-
                 translations.push(section);
             }
-
             obj.translations = translations;
         }
-
         if (data[12]) {
             var definitions = [];
-
             for (let i = 0; i < data[12].length; i++) {
                 let type = data[12][i][0];
                 let content = [];
-
                 for (let j = 0; j < data[12][i][1].length; j++) {
                     let obj = {
                         phrase: data[12][i][1][j][0],
@@ -3096,14 +3064,11 @@ var app = (function () {
             }
             obj.definitions = definitions;
         }
-
         if (data[11]) {
             var synonyms = [];
-
             for (let i = 0; i < data[11].length; i++) {
                 let type = data[11][i][0];
                 let content = [];
-
                 for (let j = 0; j < data[11][i][1].length; j++) {
                     let arr = data[11][i][1][j][0];
                     content.push(arr);
@@ -3116,7 +3081,6 @@ var app = (function () {
             }
             obj.synonyms = synonyms;
         }
-
         if (data[13]) {
             var examples = [];
             for (let i = 0; i < data[13][0].length; i++) {
@@ -3124,13 +3088,12 @@ var app = (function () {
             }
             obj.examples = examples;
         }
-
         if (data[14]) {
             obj.seeAlso = data[14][0];
         }
-
-        return obj
+        return obj;
     }
+    //# sourceMappingURL=google-translate.js.map
 
     /* src\Components\DropdownMenu.svelte generated by Svelte v3.22.3 */
 
@@ -3142,7 +3105,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (33:6) {#each items as item}
+    // (30:6) {#each items as item}
     function create_each_block(ctx) {
     	let a;
     	let t_value = /*item*/ ctx[5] + "";
@@ -3154,7 +3117,7 @@ var app = (function () {
     			t = text(t_value);
     			attr_dev(a, "href", "/");
     			attr_dev(a, "class", "dropdown-item");
-    			add_location(a, file$1, 33, 8, 772);
+    			add_location(a, file$1, 30, 8, 823);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -3172,7 +3135,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(33:6) {#each items as item}",
+    		source: "(30:6) {#each items as item}",
     		ctx
     	});
 
@@ -3218,28 +3181,28 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(span0, file$1, 24, 6, 473);
+    			add_location(span0, file$1, 21, 6, 524);
     			attr_dev(i, "class", "fas fa-angle-down");
     			attr_dev(i, "aria-hidden", "true");
-    			add_location(i, file$1, 26, 8, 545);
+    			add_location(i, file$1, 23, 8, 596);
     			attr_dev(span1, "class", "icon is-small");
-    			add_location(span1, file$1, 25, 6, 507);
+    			add_location(span1, file$1, 22, 6, 558);
     			attr_dev(button, "class", "button is-dark");
     			attr_dev(button, "aria-haspopup", "true");
     			attr_dev(button, "aria-controls", "dropdown-menu");
-    			add_location(button, file$1, 20, 4, 362);
+    			add_location(button, file$1, 17, 4, 413);
     			attr_dev(div0, "class", "dropdown-trigger");
-    			add_location(div0, file$1, 19, 2, 326);
+    			add_location(div0, file$1, 16, 2, 377);
     			attr_dev(div1, "class", "dropdown-content");
-    			add_location(div1, file$1, 31, 4, 703);
+    			add_location(div1, file$1, 28, 4, 754);
     			attr_dev(div2, "class", "dropdown-menu");
     			attr_dev(div2, "id", "dropdown-menu");
     			attr_dev(div2, "role", "menu");
-    			add_location(div2, file$1, 30, 2, 639);
-    			attr_dev(div3, "class", "dropdown svelte-15jmxwl");
+    			add_location(div2, file$1, 27, 2, 690);
+    			attr_dev(div3, "class", "dropdown svelte-hlzhkl");
     			set_style(div3, "justify-self", /*justifySelf*/ ctx[2]);
     			toggle_class(div3, "is-active", /*isActive*/ ctx[3]);
-    			add_location(div3, file$1, 14, 0, 183);
+    			add_location(div3, file$1, 11, 0, 234);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3431,7 +3394,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (96:0) {#if translationResult != null}
+    // (87:0) {#if translationResult != null}
     function create_if_block(ctx) {
     	let t0;
     	let div;
@@ -3470,12 +3433,12 @@ var app = (function () {
     			each_1_anchor = empty();
     			attr_dev(span0, "class", "translate-result-area-header svelte-2jmlz0");
     			set_style(span0, "font-weight", "bold");
-    			add_location(span0, file$2, 100, 4, 2414);
+    			add_location(span0, file$2, 91, 4, 2398);
     			set_style(span1, "font-weight", "bold");
     			set_style(span1, "color", "white");
-    			add_location(span1, file$2, 103, 4, 2522);
+    			add_location(span1, file$2, 94, 4, 2506);
     			attr_dev(div, "class", "translate-result-area svelte-2jmlz0");
-    			add_location(div, file$2, 99, 2, 2373);
+    			add_location(div, file$2, 90, 2, 2357);
     		},
     		m: function mount(target, anchor) {
     			if (if_block) if_block.m(target, anchor);
@@ -3547,14 +3510,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(96:0) {#if translationResult != null}",
+    		source: "(87:0) {#if translationResult != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (97:2) {#if translationResult.target != null}
+    // (88:2) {#if translationResult.target != null}
     function create_if_block_2(ctx) {
     	let div;
     	let t0;
@@ -3567,7 +3530,7 @@ var app = (function () {
     			t1 = text(/*targetWords*/ ctx[0]);
     			attr_dev(div, "id", "translations-of");
     			attr_dev(div, "class", "svelte-2jmlz0");
-    			add_location(div, file$2, 97, 4, 2299);
+    			add_location(div, file$2, 88, 4, 2283);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3586,14 +3549,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(97:2) {#if translationResult.target != null}",
+    		source: "(88:2) {#if translationResult.target != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (117:10) {#if showSimilarWordsForTranslations}
+    // (108:10) {#if showSimilarWordsForTranslations}
     function create_if_block_1(ctx) {
     	let div;
     	let t_value = /*line*/ ctx[9].meaning.join(", ") + "";
@@ -3603,7 +3566,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			t = text(t_value);
-    			add_location(div, file$2, 117, 12, 3104);
+    			add_location(div, file$2, 108, 12, 3088);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3621,14 +3584,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(117:10) {#if showSimilarWordsForTranslations}",
+    		source: "(108:10) {#if showSimilarWordsForTranslations}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:6) {#each translation.content as line}
+    // (102:6) {#each translation.content as line}
     function create_each_block_1(ctx) {
     	let div2;
     	let div1;
@@ -3651,12 +3614,12 @@ var app = (function () {
     			t2 = space();
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "frequency-bar");
-    			add_location(div0, file$2, 113, 12, 2923);
+    			add_location(div0, file$2, 104, 12, 2907);
     			attr_dev(span, "class", "translation-word-of-line svelte-2jmlz0");
-    			add_location(span, file$2, 114, 12, 2966);
-    			add_location(div1, file$2, 112, 10, 2904);
+    			add_location(span, file$2, 105, 12, 2950);
+    			add_location(div1, file$2, 103, 10, 2888);
     			attr_dev(div2, "class", "translate-result-line svelte-2jmlz0");
-    			add_location(div2, file$2, 111, 8, 2857);
+    			add_location(div2, file$2, 102, 8, 2841);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -3682,14 +3645,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(111:6) {#each translation.content as line}",
+    		source: "(102:6) {#each translation.content as line}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:2) {#each translationResult.translations as translation}
+    // (99:2) {#each translationResult.translations as translation}
     function create_each_block$1(ctx) {
     	let div;
     	let span;
@@ -3718,9 +3681,9 @@ var app = (function () {
 
     			t2 = space();
     			attr_dev(span, "class", "translate-result-area-header svelte-2jmlz0");
-    			add_location(span, file$2, 109, 6, 2736);
+    			add_location(span, file$2, 100, 6, 2720);
     			attr_dev(div, "class", "translate-result-area svelte-2jmlz0");
-    			add_location(div, file$2, 108, 4, 2693);
+    			add_location(div, file$2, 99, 4, 2677);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3771,7 +3734,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(108:2) {#each translationResult.translations as translation}",
+    		source: "(99:2) {#each translationResult.translations as translation}",
     		ctx
     	});
 
@@ -3787,6 +3750,8 @@ var app = (function () {
     	let t1;
     	let t2;
     	let textarea;
+    	let textarea_cols_value;
+    	let textarea_rows_value;
     	let t3;
     	let if_block_anchor;
     	let current;
@@ -3827,20 +3792,20 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(i, "class", "fas fa-exchange-alt");
-    			add_location(i, file$2, 77, 6, 1837);
+    			add_location(i, file$2, 68, 6, 1821);
     			attr_dev(span, "class", "icon is-medium");
-    			add_location(span, file$2, 76, 4, 1800);
+    			add_location(span, file$2, 67, 4, 1784);
     			attr_dev(button, "class", "button is-link svelte-2jmlz0");
-    			add_location(button, file$2, 75, 2, 1763);
+    			add_location(button, file$2, 66, 2, 1747);
     			set_custom_element_data(top_bar, "class", "svelte-2jmlz0");
-    			add_location(top_bar, file$2, 73, 0, 1685);
+    			add_location(top_bar, file$2, 64, 0, 1669);
     			attr_dev(textarea, "class", "textarea has-fixed-size svelte-2jmlz0");
     			attr_dev(textarea, "placeholder", "Translate");
     			attr_dev(textarea, "name", "main-text-area");
     			attr_dev(textarea, "id", "main-text-area");
-    			attr_dev(textarea, "cols", "30");
-    			attr_dev(textarea, "rows", "5");
-    			add_location(textarea, file$2, 86, 0, 2014);
+    			attr_dev(textarea, "cols", textarea_cols_value = 30);
+    			attr_dev(textarea, "rows", textarea_rows_value = 5);
+    			add_location(textarea, file$2, 77, 0, 1998);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3865,7 +3830,7 @@ var app = (function () {
 
     			dispose = [
     				listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[5]),
-    				listen_dev(textarea, "input", /*translateWords*/ ctx[4], false, false, false)
+    				listen_dev(textarea, "change", /*translateWords*/ ctx[4], false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
@@ -4043,7 +4008,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (84:0) {#if definitionResult != null}
+    // (77:0) {#if definitionResult != null}
     function create_if_block$1(ctx) {
     	let div;
     	let t0;
@@ -4071,7 +4036,7 @@ var app = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(div, "id", "definition-of");
-    			add_location(div, file$3, 84, 2, 2011);
+    			add_location(div, file$3, 77, 2, 2001);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4124,14 +4089,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(84:0) {#if definitionResult != null}",
+    		source: "(77:0) {#if definitionResult != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (90:6) {#each definition.content as line, i}
+    // (83:6) {#each definition.content as line, i}
     function create_each_block_1$1(ctx) {
     	let div1;
     	let div0;
@@ -4151,11 +4116,11 @@ var app = (function () {
     			span = element("span");
     			t2 = text(t2_value);
     			attr_dev(div0, "class", "line-count svelte-ob64xk");
-    			add_location(div0, file$3, 91, 10, 2346);
+    			add_location(div0, file$3, 84, 10, 2336);
     			attr_dev(span, "class", "definition-word-of-line svelte-ob64xk");
-    			add_location(span, file$3, 92, 10, 2395);
+    			add_location(span, file$3, 85, 10, 2385);
     			attr_dev(div1, "class", "definition-result-line svelte-ob64xk");
-    			add_location(div1, file$3, 90, 8, 2298);
+    			add_location(div1, file$3, 83, 8, 2288);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -4177,14 +4142,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(90:6) {#each definition.content as line, i}",
+    		source: "(83:6) {#each definition.content as line, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (87:2) {#each definitionResult.definitions as definition}
+    // (80:2) {#each definitionResult.definitions as definition}
     function create_each_block$2(ctx) {
     	let div;
     	let span;
@@ -4213,9 +4178,9 @@ var app = (function () {
 
     			t2 = space();
     			attr_dev(span, "class", "definition-result-area-header svelte-ob64xk");
-    			add_location(span, file$3, 88, 6, 2175);
+    			add_location(span, file$3, 81, 6, 2165);
     			attr_dev(div, "class", "definition-result-area svelte-ob64xk");
-    			add_location(div, file$3, 87, 4, 2131);
+    			add_location(div, file$3, 80, 4, 2121);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4266,7 +4231,7 @@ var app = (function () {
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(87:2) {#each definitionResult.definitions as definition}",
+    		source: "(80:2) {#each definitionResult.definitions as definition}",
     		ctx
     	});
 
@@ -4277,6 +4242,8 @@ var app = (function () {
     	let top_bar;
     	let t0;
     	let textarea;
+    	let textarea_cols_value;
+    	let textarea_rows_value;
     	let t1;
     	let if_block_anchor;
     	let dispose;
@@ -4291,14 +4258,14 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			set_custom_element_data(top_bar, "class", "svelte-ob64xk");
-    			add_location(top_bar, file$3, 72, 0, 1756);
+    			add_location(top_bar, file$3, 65, 0, 1744);
     			attr_dev(textarea, "class", "textarea has-fixed-size svelte-ob64xk");
     			attr_dev(textarea, "placeholder", "Write a word");
     			attr_dev(textarea, "name", "main-text-area");
     			attr_dev(textarea, "id", "main-text-area");
-    			attr_dev(textarea, "cols", "30");
-    			attr_dev(textarea, "rows", "5");
-    			add_location(textarea, file$3, 74, 0, 1771);
+    			attr_dev(textarea, "cols", textarea_cols_value = 30);
+    			attr_dev(textarea, "rows", textarea_rows_value = 5);
+    			add_location(textarea, file$3, 67, 0, 1759);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4458,17 +4425,17 @@ var app = (function () {
 
     function get_each_context_1$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[10] = list[i];
+    	child_ctx[9] = list[i];
     	return child_ctx;
     }
 
     function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[7] = list[i];
+    	child_ctx[6] = list[i];
     	return child_ctx;
     }
 
-    // (79:0) {#if translationResult != null}
+    // (73:0) {#if translationResult != null}
     function create_if_block$2(ctx) {
     	let t0;
     	let div;
@@ -4507,12 +4474,12 @@ var app = (function () {
     			each_1_anchor = empty();
     			attr_dev(span0, "class", "translate-result-area-header svelte-khlx3c");
     			set_style(span0, "font-weight", "bold");
-    			add_location(span0, file$4, 83, 4, 2115);
+    			add_location(span0, file$4, 77, 4, 2077);
     			set_style(span1, "font-weight", "bold");
     			set_style(span1, "color", "white");
-    			add_location(span1, file$4, 86, 4, 2223);
+    			add_location(span1, file$4, 80, 4, 2185);
     			attr_dev(div, "class", "translate-result-area svelte-khlx3c");
-    			add_location(div, file$4, 82, 2, 2074);
+    			add_location(div, file$4, 76, 2, 2036);
     		},
     		m: function mount(target, anchor) {
     			if (if_block) if_block.m(target, anchor);
@@ -4584,14 +4551,14 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(79:0) {#if translationResult != null}",
+    		source: "(73:0) {#if translationResult != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (80:2) {#if translationResult.target != null}
+    // (74:2) {#if translationResult.target != null}
     function create_if_block_2$1(ctx) {
     	let div;
     	let t0;
@@ -4604,7 +4571,7 @@ var app = (function () {
     			t1 = text(/*targetWords*/ ctx[0]);
     			attr_dev(div, "id", "translations-of");
     			attr_dev(div, "class", "svelte-khlx3c");
-    			add_location(div, file$4, 80, 4, 2000);
+    			add_location(div, file$4, 74, 4, 1962);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4623,31 +4590,31 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(80:2) {#if translationResult.target != null}",
+    		source: "(74:2) {#if translationResult.target != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (100:10) {#if showSimilarWordsForTranslations}
+    // (94:10) {#if showSimilarWordsForTranslations}
     function create_if_block_1$1(ctx) {
     	let div;
-    	let t_value = /*line*/ ctx[10].meaning.join(", ") + "";
+    	let t_value = /*line*/ ctx[9].meaning.join(", ") + "";
     	let t;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			t = text(t_value);
-    			add_location(div, file$4, 100, 12, 2805);
+    			add_location(div, file$4, 94, 12, 2767);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*translationResult*/ 2 && t_value !== (t_value = /*line*/ ctx[10].meaning.join(", ") + "")) set_data_dev(t, t_value);
+    			if (dirty & /*translationResult*/ 2 && t_value !== (t_value = /*line*/ ctx[9].meaning.join(", ") + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
@@ -4658,21 +4625,21 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(100:10) {#if showSimilarWordsForTranslations}",
+    		source: "(94:10) {#if showSimilarWordsForTranslations}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (94:6) {#each translation.content as line}
+    // (88:6) {#each translation.content as line}
     function create_each_block_1$2(ctx) {
     	let div2;
     	let div1;
     	let div0;
     	let t0;
     	let span;
-    	let t1_value = /*line*/ ctx[10].word + "";
+    	let t1_value = /*line*/ ctx[9].word + "";
     	let t1;
     	let t2;
     	let if_block = /*showSimilarWordsForTranslations*/ ctx[3] && create_if_block_1$1(ctx);
@@ -4688,12 +4655,12 @@ var app = (function () {
     			t2 = space();
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "frequency-bar");
-    			add_location(div0, file$4, 96, 12, 2624);
+    			add_location(div0, file$4, 90, 12, 2586);
     			attr_dev(span, "class", "translation-word-of-line svelte-khlx3c");
-    			add_location(span, file$4, 97, 12, 2667);
-    			add_location(div1, file$4, 95, 10, 2605);
+    			add_location(span, file$4, 91, 12, 2629);
+    			add_location(div1, file$4, 89, 10, 2567);
     			attr_dev(div2, "class", "translate-result-line svelte-khlx3c");
-    			add_location(div2, file$4, 94, 8, 2558);
+    			add_location(div2, file$4, 88, 8, 2520);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -4706,7 +4673,7 @@ var app = (function () {
     			if (if_block) if_block.m(div2, null);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*translationResult*/ 2 && t1_value !== (t1_value = /*line*/ ctx[10].word + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*translationResult*/ 2 && t1_value !== (t1_value = /*line*/ ctx[9].word + "")) set_data_dev(t1, t1_value);
     			if (/*showSimilarWordsForTranslations*/ ctx[3]) if_block.p(ctx, dirty);
     		},
     		d: function destroy(detaching) {
@@ -4719,22 +4686,22 @@ var app = (function () {
     		block,
     		id: create_each_block_1$2.name,
     		type: "each",
-    		source: "(94:6) {#each translation.content as line}",
+    		source: "(88:6) {#each translation.content as line}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:2) {#each translationResult.translations as translation}
+    // (85:2) {#each translationResult.translations as translation}
     function create_each_block$3(ctx) {
     	let div;
     	let span;
-    	let t0_value = /*translation*/ ctx[7].type + "";
+    	let t0_value = /*translation*/ ctx[6].type + "";
     	let t0;
     	let t1;
     	let t2;
-    	let each_value_1 = /*translation*/ ctx[7].content;
+    	let each_value_1 = /*translation*/ ctx[6].content;
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -4755,9 +4722,9 @@ var app = (function () {
 
     			t2 = space();
     			attr_dev(span, "class", "translate-result-area-header svelte-khlx3c");
-    			add_location(span, file$4, 92, 6, 2437);
+    			add_location(span, file$4, 86, 6, 2399);
     			attr_dev(div, "class", "translate-result-area svelte-khlx3c");
-    			add_location(div, file$4, 91, 4, 2394);
+    			add_location(div, file$4, 85, 4, 2356);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4772,10 +4739,10 @@ var app = (function () {
     			append_dev(div, t2);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*translationResult*/ 2 && t0_value !== (t0_value = /*translation*/ ctx[7].type + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*translationResult*/ 2 && t0_value !== (t0_value = /*translation*/ ctx[6].type + "")) set_data_dev(t0, t0_value);
 
     			if (dirty & /*translationResult, showSimilarWordsForTranslations*/ 10) {
-    				each_value_1 = /*translation*/ ctx[7].content;
+    				each_value_1 = /*translation*/ ctx[6].content;
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -4808,7 +4775,7 @@ var app = (function () {
     		block,
     		id: create_each_block$3.name,
     		type: "each",
-    		source: "(91:2) {#each translationResult.translations as translation}",
+    		source: "(85:2) {#each translationResult.translations as translation}",
     		ctx
     	});
 
@@ -4824,6 +4791,8 @@ var app = (function () {
     	let t1;
     	let t2;
     	let textarea;
+    	let textarea_cols_value;
+    	let textarea_rows_value;
     	let t3;
     	let if_block_anchor;
     	let current;
@@ -4864,20 +4833,20 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(i, "class", "fas fa-exchange-alt");
-    			add_location(i, file$4, 60, 6, 1537);
+    			add_location(i, file$4, 54, 6, 1499);
     			attr_dev(span, "class", "icon is-medium");
-    			add_location(span, file$4, 59, 4, 1500);
+    			add_location(span, file$4, 53, 4, 1462);
     			attr_dev(button, "class", "button is-link svelte-khlx3c");
-    			add_location(button, file$4, 58, 2, 1463);
+    			add_location(button, file$4, 52, 2, 1425);
     			set_custom_element_data(top_bar, "class", "svelte-khlx3c");
-    			add_location(top_bar, file$4, 56, 0, 1385);
+    			add_location(top_bar, file$4, 50, 0, 1347);
     			attr_dev(textarea, "class", "textarea has-fixed-size svelte-khlx3c");
     			attr_dev(textarea, "placeholder", "Translate");
     			attr_dev(textarea, "name", "main-text-area");
     			attr_dev(textarea, "id", "main-text-area");
-    			attr_dev(textarea, "cols", "30");
-    			attr_dev(textarea, "rows", "5");
-    			add_location(textarea, file$4, 69, 0, 1714);
+    			attr_dev(textarea, "cols", textarea_cols_value = 30);
+    			attr_dev(textarea, "rows", textarea_rows_value = 5);
+    			add_location(textarea, file$4, 63, 0, 1676);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4901,7 +4870,7 @@ var app = (function () {
     			if (remount) run_all(dispose);
 
     			dispose = [
-    				listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[6]),
+    				listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[5]),
     				listen_dev(textarea, "change", /*translateWords*/ ctx[4], false, false, false)
     			];
     		},
@@ -4960,18 +4929,17 @@ var app = (function () {
 
     function instance$4($$self, $$props, $$invalidate) {
     	let languages = ["Turkish", "English"];
-    	let { word = "test" } = $$props;
     	let { targetWords } = $$props;
     	let translationResult;
     	let showSimilarWordsForTranslations = false;
 
     	async function translateWords(e) {
     		$$invalidate(0, targetWords = e.target.value);
-    		$$invalidate(1, translationResult = await translate(targetWords, { from: "en", to: "tr" }));
+    		$$invalidate(1, translationResult = await translate(targetWords, { from: "en", to: "tr" }, false));
     		console.log(translationResult);
     	}
 
-    	const writable_props = ["word", "targetWords"];
+    	const writable_props = ["targetWords"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<SlangView> was created with unknown prop '${key}'`);
@@ -4986,7 +4954,6 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("word" in $$props) $$invalidate(5, word = $$props.word);
     		if ("targetWords" in $$props) $$invalidate(0, targetWords = $$props.targetWords);
     	};
 
@@ -4994,7 +4961,6 @@ var app = (function () {
     		translate,
     		DropdownMenu,
     		languages,
-    		word,
     		targetWords,
     		translationResult,
     		showSimilarWordsForTranslations,
@@ -5003,7 +4969,6 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("languages" in $$props) $$invalidate(2, languages = $$props.languages);
-    		if ("word" in $$props) $$invalidate(5, word = $$props.word);
     		if ("targetWords" in $$props) $$invalidate(0, targetWords = $$props.targetWords);
     		if ("translationResult" in $$props) $$invalidate(1, translationResult = $$props.translationResult);
     		if ("showSimilarWordsForTranslations" in $$props) $$invalidate(3, showSimilarWordsForTranslations = $$props.showSimilarWordsForTranslations);
@@ -5019,7 +4984,6 @@ var app = (function () {
     		languages,
     		showSimilarWordsForTranslations,
     		translateWords,
-    		word,
     		textarea_input_handler
     	];
     }
@@ -5027,7 +4991,7 @@ var app = (function () {
     class SlangView extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { word: 5, targetWords: 0 });
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { targetWords: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -5042,14 +5006,6 @@ var app = (function () {
     		if (/*targetWords*/ ctx[0] === undefined && !("targetWords" in props)) {
     			console_1$2.warn("<SlangView> was created without expected prop 'targetWords'");
     		}
-    	}
-
-    	get word() {
-    		throw new Error("<SlangView>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set word(value) {
-    		throw new Error("<SlangView>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get targetWords() {
@@ -5422,11 +5378,12 @@ var app = (function () {
     }
 
     const app = new App({
-    	target: document.body,
-    	props: {
-    		name: 'world'
-    	}
+        target: document.body,
+        props: {
+            name: 'world'
+        }
     });
+    //# sourceMappingURL=svelte.js.map
 
     return app;
 

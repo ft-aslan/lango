@@ -1,12 +1,12 @@
-<script>
-  let isActive;
-  export let placeholder;
-  export let items;
+<script lang="ts">
+  let isActive : boolean;
+  export let placeholder : string;
+  export let items : string[];
 
   export let justifySelf;
 </script>
 
-<style>
+<style lang="scss">
   .dropdown {
     width: max-content;
   }

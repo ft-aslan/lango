@@ -1,18 +1,19 @@
 {
   "name": "lango",
-  "productName": "Lango",
+  "productName": "lango",
   "version": "1.0.0",
-  "description": "Lango",
+  "description": "lango",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
+    "start": "concurrently \"tsc src/index.ts \" \"npm:svelte-dev\" \"electron-forge start\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "svelte-build": "rollup -c",
     "svelte-dev": "rollup -c -w",
-    "svelte-start": "sirv public"
+    "svelte-start": "sirv public",
+    "validate": "svelte-check"
   },
   "keywords": [],
   "author": "alazul",
@@ -48,7 +49,6 @@
     "axios": "^0.19.2",
     "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
-    "moment": "^2.26.0",
     "qs": "^6.9.4",
     "sirv-cli": "^0.4.6"
   },
@@ -60,6 +60,8 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.51",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",
+    "@rollup/plugin-typescript": "^4.1.2",
+    "@tsconfig/svelte": "^1.0.0",
     "autoprefixer": "^9.8.0",
     "concurrently": "^5.2.0",
     "electron": "8.0.2",
@@ -69,7 +71,10 @@
     "rollup-plugin-svelte": "^5.2.2",
     "rollup-plugin-terser": "^5.3.0",
     "svelte": "^3.22.3",
+    "svelte-check": "^0.1.57",
     "svelte-preprocess": "^3.7.4",
-    "typescript": "^3.9.3"
+    "tsc-watch": "^4.2.9",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.6"
   }
 }

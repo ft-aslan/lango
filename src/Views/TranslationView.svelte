@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
   import { translate } from "../API/google-translate";
@@ -8,7 +8,7 @@
 
   onMount(async () => {
     if (targetWords) {
-      await translateWords();
+      await translateWords(null);
     }
   });
 
@@ -102,13 +102,13 @@
 
 <textarea
   bind:value={targetWords}
-  on:input={translateWords}
+  on:change={translateWords}
   class="textarea has-fixed-size"
   placeholder="Translate"
   name="main-text-area"
   id="main-text-area"
-  cols="30"
-  rows="5" />
+  cols={30}
+  rows={5}/>
 {#if translationResult != null}
   {#if translationResult.target != null}
     <div id="translations-of">Translations of {targetWords}</div>

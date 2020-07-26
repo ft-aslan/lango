@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
   import { translate } from "../API/google-translate";
@@ -8,7 +8,7 @@
 
   onMount(async () => {
     if (targetWords) {
-      await defineWords();
+      await defineWords(null);
     }
   });
 
@@ -31,7 +31,7 @@
     color: white;
     background-color: rgb(51, 51, 51);
     border: none;
-
+    
     &::placeholder {
       color: rgb(167, 167, 167);
     }
@@ -95,8 +95,8 @@
   placeholder="Write a word"
   name="main-text-area"
   id="main-text-area"
-  cols="30"
-  rows="5" />
+  cols= {30}
+  rows= {5} />
 {#if definitionResult != null}
   <div id="definition-of">Definitions of {targetWords}</div>
 
