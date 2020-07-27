@@ -15,7 +15,7 @@ export default {
 	output: {
 		sourcemap: true,
 		format: 'iife',
-		name: 'app',
+		name: 'app',		
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
@@ -36,7 +36,7 @@ export default {
 		// consult the documentation for details:
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
-			browser: true,
+			browser: false,
 			dedupe: ['svelte']
 		}),
 		commonjs(),
@@ -56,7 +56,16 @@ export default {
 	],
 	watch: {
 		clearScreen: false
-	}
+	},
+	external: [
+		'electron',
+		'child_process',
+		'fs',
+		'path',
+		'url',
+		'module',
+		'os'
+	]
 };
 
 function serve() {

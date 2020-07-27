@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import getToken from "./google-translate-token.js";
+//import getToken from "./google-translate-token.js";
 
 interface TranslationReqTemplate {
     client: string,
@@ -11,14 +11,14 @@ interface TranslationReqTemplate {
     ie: string,
     oe: string,
     q: string,
-    tk: string
+    //tk: string
 }
 
 
 export async function translate(text, opts, justDefinition) {
     try {
-        let tokenRet = getToken(text);
-        console.log(tokenRet);
+        //let tokenRet = getToken(text);
+        //console.log(tokenRet);
         const url = 'https://translate.google.com/translate_a/single'
         let data: TranslationReqTemplate = {
             client: 't',
@@ -29,7 +29,7 @@ export async function translate(text, opts, justDefinition) {
             ie: 'UTF-8',
             oe: 'UTF-8',
             q: text,
-            tk: tokenRet
+            //tk: tokenRet
         }
         if (!justDefinition) {
             let allOtherOptions = ['at', 'bd', 'ex', 'ld', 'qca', 'rw', 'rm', 'ss', 't'];

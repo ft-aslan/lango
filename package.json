@@ -3,9 +3,9 @@
   "productName": "lango",
   "version": "1.0.0",
   "description": "lango",
-  "main": "src/index.js",
+  "main": "public/build/index.js",
   "scripts": {
-    "start": "concurrently \"tsc src/index.ts \" \"npm:svelte-dev\" \"electron-forge start\"",
+    "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -48,7 +48,6 @@
   "dependencies": {
     "axios": "^0.19.2",
     "electron-reload": "^1.5.0",
-    "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "qs": "^6.9.4",
     "sirv-cli": "^0.4.6"
@@ -65,7 +64,7 @@
     "@tsconfig/svelte": "^1.0.0",
     "autoprefixer": "^9.8.0",
     "concurrently": "^5.2.0",
-    "electron": "8.0.2",
+    "electron": "8.2.4",
     "node-sass": "^4.14.1",
     "rollup": "^1.32.1",
     "rollup-plugin-livereload": "^1.3.0",
