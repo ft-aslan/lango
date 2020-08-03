@@ -1,6 +1,47 @@
 import axios from "axios";
 import qs from "qs";
-//import getToken from "./google-translate-token.js";
+import getToken from "./google-translate-token.js";
+
+class Language {
+    didYouMean: boolean = false;
+    iso: string = '';
+}
+class AutoCorrectionText {
+    autoCorrected: boolean = false;
+    value: string = '';
+    didYouMean: boolean = false;
+}
+class Correction {
+    language: Language = new Language();
+    text: AutoCorrectionText = new AutoCorrectionText();
+}
+
+class Translation {
+    type: string = '';
+    content: TranslationContent[];
+}
+
+class TranslationContent {
+    article?: string
+    word: string
+    meaning: string[]
+    rating: number
+    bar: string    
+}
+
+export class GoogleTranslationRes {
+    target: string;
+    correction: Correction = new Correction();
+    input: string[];
+    text: string;
+    definitions: object[];
+    pronunciation: string;
+    translation: string;
+    translations: Translation[];
+    synonyms: object[];
+    examples: string[];
+    seeAlso: string[];
+}
 
 interface TranslationReqTemplate {
     client: string,
@@ -11,29 +52,30 @@ interface TranslationReqTemplate {
     ie: string,
     oe: string,
     q: string,
-    //tk: string
+    tk: string
 }
 
 
-export async function translate(text, opts, justDefinition) {
+export async function translate(text, opts, justDefinition): Promise<GoogleTranslationRes> {
     try {
-        //let tokenRet = getToken(text);
-        //console.log(tokenRet);
+        let tokenRet = await getToken(text);
+        console.log(tokenRet);
         const url = 'https://translate.google.com/translate_a/single'
         let data: TranslationReqTemplate = {
             client: 't',
             sl: opts.from,
             tl: opts.to,
             hl: opts.from,
-            dt: ['md'],
+            dt: ['md', 'at', 'bd', 'ex', 'ld', 'qca', 'rw', 'rm', 'ss', 't'],
             ie: 'UTF-8',
             oe: 'UTF-8',
             q: text,
-            //tk: tokenRet
+            tk: tokenRet
         }
         if (!justDefinition) {
             let allOtherOptions = ['at', 'bd', 'ex', 'ld', 'qca', 'rw', 'rm', 'ss', 't'];
             data.dt.concat(allOtherOptions);
+            console.log(data);
         }
         console.log(url + '?' + qs.stringify(data, { indices: false }));
         const res = await axios({
@@ -41,7 +83,7 @@ export async function translate(text, opts, justDefinition) {
             url: url + '?' + qs.stringify(data, { indices: false })
         })
         if (justDefinition) {
-            return remapJustDefinition(res.data)
+            //return remapJustDefinition(res.data)
         }
         else return remapTranslate(res.data)
     } catch (err) {
@@ -79,29 +121,7 @@ function remapJustDefinition(data) {
 }
 function remapTranslate(data) {
 
-    var obj: {
-        target,
-        correction: {
-            language: {
-                didYouMean: boolean,
-                iso: ''
-            },
-            text: {
-                autoCorrected: boolean,
-                value: '',
-                didYouMean: boolean
-            }
-        },
-        input,
-        text,
-        definitions,
-        pronunciation,
-        translation,
-        translations,
-        synonyms,
-        examples,
-        seeAlso
-    }
+    var obj: GoogleTranslationRes = new GoogleTranslationRes();
 
     if (data[2] === data[8][0][0]) {
         obj.correction.language.iso = data[2];

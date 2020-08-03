@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { translate } from "../API/google-translate";
+  import { translate, GoogleTranslationRes } from "../API/google-translate";
   import DropdownMenu from "../Components/DropdownMenu.svelte";
 
   export let targetWords;
@@ -14,7 +14,7 @@
 
   let languages = ["Turkish", "English"];
 
-  let translationResult;
+  let translationResult: GoogleTranslationRes;
 
   let showSimilarWordsForTranslations = false;
 

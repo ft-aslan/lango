@@ -1,13 +1,12 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, IpcMain } from "electron";
 import * as path from "path";
 
 // Live Reload
 require('electron-reload')(__dirname, {
-  electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
-  awaitWriteFinish: {
-    stabilityThreshold: 3000,
-  },
+  electron: path.join(__dirname, '../../node_modules', '.bin', 'electron'),
+  awaitWriteFinish: true,
 });
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -27,7 +26,7 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../public/index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
