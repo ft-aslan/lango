@@ -43,6 +43,7 @@ export class GoogleTranslationRes {
     seeAlso: string[];
 }
 
+
 interface TranslationReqTemplate {
     client: string,
     sl: string,
@@ -83,7 +84,7 @@ export async function translate(text, opts, justDefinition): Promise<GoogleTrans
             url: url + '?' + qs.stringify(data, { indices: false })
         })
         if (justDefinition) {
-            //return remapJustDefinition(res.data)
+            return remapJustDefinition(res.data)
         }
         else return remapTranslate(res.data)
     } catch (err) {
@@ -91,8 +92,8 @@ export async function translate(text, opts, justDefinition): Promise<GoogleTrans
         return null
     }
 }
-function remapJustDefinition(data) {
-    let obj = { definitions };
+function remapJustDefinition(data) : GoogleTranslationRes {
+    var resultDefination : GoogleTranslationRes = new GoogleTranslationRes();
 
     if (data[12]) {
         var definitions = []
@@ -114,10 +115,10 @@ function remapJustDefinition(data) {
             }
             definitions.push(section)
         }
-        obj.definitions = definitions
+        resultDefination.definitions = definitions
     }
 
-    return obj
+    return resultDefination;
 }
 function remapTranslate(data) {
 
