@@ -9,10 +9,6 @@
 
   var targetWords;
 
-  
-  // // const worker_threads = require("electron-json-storage");
-  // // import worker_threads from "worker_threads";
-	// // console.log(worker_threads);
 
 </script>
 

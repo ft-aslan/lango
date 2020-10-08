@@ -22,7 +22,7 @@
     let result = await translate(targetWords, { from: "en", to: "tr" }, false);
 
     if (result) {
-      if (result.hasOwnProperty("translations")) {
+      if (result.hasOwnProperty("translations") || result.hasOwnProperty("translation")) {
         translationResult = result;
       }
     }
@@ -57,6 +57,7 @@
 
   #translations-of {
     color: white;
+    padding: 5px;
     background-color: rgb(41, 41, 41);
   }
 
@@ -95,7 +96,7 @@
     </span>
   </button>
   <DropdownMenu
-    justifySelf="right"
+    justifySelfRight={true}
     placeholder="Translate From"
     items={languages} />
 </top-bar>
@@ -121,20 +122,22 @@
       {translationResult.translation}
     </span>
   </div>
-  {#each translationResult.translations as translation}
-    <div class="translate-result-area">
-      <span class="translate-result-area-header">{translation.type}</span>
-      {#each translation.content as line}
-        <div class="translate-result-line">
-          <div>
-            <div class="frequency-bar" />
-            <span class="translation-word-of-line">{line.word}</span>
+  {#if translationResult.translations}
+    {#each translationResult.translations as translation}
+      <div class="translate-result-area">
+        <span class="translate-result-area-header">{translation.type}</span>
+        {#each translation.content as line}
+          <div class="translate-result-line">
+            <div>
+              <div class="frequency-bar" />
+              <span class="translation-word-of-line">{line.word}</span>
+            </div>
+            {#if showSimilarWordsForTranslations}
+              <div>{line.meaning.join(', ')}</div>
+            {/if}
           </div>
-          {#if showSimilarWordsForTranslations}
-            <div>{line.meaning.join(', ')}</div>
-          {/if}
-        </div>
-      {/each}
-    </div>
-  {/each}
+        {/each}
+      </div>
+    {/each}
+  {/if}
 {/if}

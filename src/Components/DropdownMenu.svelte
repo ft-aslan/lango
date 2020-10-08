@@ -3,7 +3,7 @@
   export let placeholder : string;
   export let items : string[];
 
-  export let justifySelf;
+  export let justifySelfRight: boolean;
 </script>
 
 <style lang="scss">
@@ -14,7 +14,7 @@
 
 <div
   class="dropdown"
-  style="justify-self:{justifySelf};"  
+  style="justify-self:{justifySelfRight ? 'right' : 'left'}"  
   on:click={() => (isActive = !isActive)}
   class:is-active={isActive}>
   <div class="dropdown-trigger">

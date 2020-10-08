@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { translate } from "../API/google-translate";
+  import { translate, GoogleTranslationRes } from "../API/google-translate";
   import DropdownMenu from "../Components/DropdownMenu.svelte";
 
   export let targetWords;
@@ -12,7 +12,7 @@
     }
   });
 
-  let definitionResult;
+  let definitionResult : GoogleTranslationRes;
 
   async function defineWords(e) {
     let result = await translate(targetWords, { from: "en", to: "tr" }, true);

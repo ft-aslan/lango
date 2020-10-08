@@ -1,18 +1,30 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import { translate } from "../API/google-translate";
   import DropdownMenu from "../Components/DropdownMenu.svelte";
+
+  import {
+    findSlangDefinition,
+    SlangDefinitionRes,
+  } from "../API/urban-dictionary";
+
+  onMount(async () => {
+    if (targetWords) {
+      await translateWords(null);
+    }
+  });
 
   let languages = ["Turkish", "English"];
 
   export let targetWords;
-  let translationResult;
+  let slangDefinitionResult: SlangDefinitionRes[];
 
   let showSimilarWordsForTranslations = false;
 
   async function translateWords(e) {
-    targetWords = e.target.value;
-    translationResult = await translate(targetWords, { from: "en", to: "tr" }, false);
-    console.log(translationResult);
+    slangDefinitionResult = await findSlangDefinition(targetWords);
+    console.log(slangDefinitionResult);
   }
 </script>
 
@@ -58,7 +70,19 @@
     .translate-result-line {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: 1fr;
+      grid-template-columns: max-content 1fr;
+
+      .line-count {
+        display: flex;
+        justify-content: center;
+
+        width: 25px;
+        height: 25px;
+        border: 1px solid rgb(111, 111, 111);
+        border-radius: 50%;
+
+        margin: 10px;
+      }
 
       .translation-word-of-line {
         color: white;
@@ -66,19 +90,6 @@
     }
   }
 </style>
-
-<top-bar>
-  <DropdownMenu placeholder="Translate To" items={languages} />
-  <button class="button is-link">
-    <span class="icon is-medium">
-      <i class="fas fa-exchange-alt" />
-    </span>
-  </button>
-  <DropdownMenu
-    justifySelf="right"
-    placeholder="Translate From"
-    items={languages} />
-</top-bar>
 
 <textarea
   bind:value={targetWords}
@@ -89,32 +100,25 @@
   id="main-text-area"
   cols={30}
   rows={5} />
-{#if translationResult != null}
-  {#if translationResult.target != null}
-    <div id="translations-of">Translations of {targetWords}</div>
-  {/if}
-  <div class="translate-result-area">
-    <span class="translate-result-area-header" style="font-weight: bold;">
-      most common
-    </span>
-    <span style="font-weight: bold; color:white;">
-      {translationResult.translation}
-    </span>
-  </div>
-  {#each translationResult.translations as translation}
-    <div class="translate-result-area">
-      <span class="translate-result-area-header">{translation.type}</span>
-      {#each translation.content as line}
+{#if slangDefinitionResult != null}
+  <div id="translations-of">Slang definitions of {targetWords}</div>
+  {#each slangDefinitionResult as definition, i}
+    {#if i == 0}
+      <div class="translate-result-area">
+        <span class="translate-result-area-header" style="font-weight: bold;">
+          most common
+        </span>
+        <span style="font-weight: bold; color:white;">
+          {definition.definition}
+        </span>
+      </div>
+    {:else}
+      <div class="translate-result-area">
         <div class="translate-result-line">
-          <div>
-            <div class="frequency-bar" />
-            <span class="translation-word-of-line">{line.word}</span>
-          </div>
-          {#if showSimilarWordsForTranslations}
-            <div>{line.meaning.join(', ')}</div>
-          {/if}
+          <div class="line-count">{i + 1}</div>
+          <span class="translation-word-of-line">{definition.definition}</span>
         </div>
-      {/each}
-    </div>
+      </div>
+    {/if}
   {/each}
 {/if}
