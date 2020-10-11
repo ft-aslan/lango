@@ -5,13 +5,13 @@
 // const { ipcRenderer } = require('electron').remote;
 // ipcRenderer.sendSync("getValueFromSettings", 'TKK');
 
-import settings from "electron-settings"
+//import settings from "electron-settings"
 
 var window = {
   TKK: '0'
 };
 
-settings.get('TKK').then(result => { if (result) { window.TKK = result } })
+//settings.get('TKK').then(result => { if (result) { window.TKK = result } })
 
 function sM(a) {
   var b

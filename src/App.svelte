@@ -1,4 +1,6 @@
 <script lang="ts">
+  //import {ipcRenderer} from "electron";
+  
   import TopNav from "./Components/TopNav.svelte";
 
   import TranslationView from "./Views/TranslationView.svelte";
@@ -9,7 +11,9 @@
 
   var targetWords;
 
-
+  // ipcRenderer.on("focusedToTheMainWindow", (event, message) => {
+  //   targetWords = message;
+  // });
 </script>
 
 <style lang="scss">
@@ -21,13 +25,13 @@
 </style>
 
 <main>
-  <TopNav on:tabChange={(e) => currentTab = e.detail.value} />
-  {#if currentTab == "translation"}
-     <TranslationView bind:targetWords={targetWords} />
-  {:else if  currentTab == "definition"}
-     <DefinitionView bind:targetWords={targetWords}/>
+  <TopNav on:tabChange={(e) => (currentTab = e.detail.value)} />
+  {#if currentTab == 'translation'}
+    <TranslationView bind:targetWords />
+  {:else if currentTab == 'definition'}
+    <DefinitionView bind:targetWords />
   {:else}
-     <SlangView bind:targetWords={targetWords}/>
+    <SlangView bind:targetWords />
   {/if}
-  
+
 </main>
