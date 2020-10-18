@@ -1,9 +1,7 @@
 
 // const electron = require("electron").remote;
 // const settings = electron.require("electron-json-storage");
-
-// const { ipcRenderer } = require('electron').remote;
-// ipcRenderer.sendSync("getValueFromSettings", 'TKK');
+Native.ipc.send("getValueFromSettings", 'TKK');
 
 //import settings from "electron-settings"
 

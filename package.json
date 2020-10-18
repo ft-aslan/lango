@@ -1,7 +1,7 @@
 {
   "name": "lango",
   "productName": "lango",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "lango",
   "main": "public/build/electron.js",
   "scripts": {

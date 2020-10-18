@@ -31,6 +31,8 @@ export default [
       "url",
       "module",
       "os",
+      "stream",
+      "tty"
     ],
   },
   {
