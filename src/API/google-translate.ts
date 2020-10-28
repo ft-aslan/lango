@@ -1,4 +1,3 @@
-import axios from "axios";
 import qs from "qs";
 import getToken from "./google-translate-token.js";
 
@@ -26,7 +25,7 @@ class TranslationContent {
     word: string
     meaning: string[]
     rating: number
-    bar: string    
+    bar: string
 }
 
 export class GoogleTranslationRes {
@@ -79,21 +78,25 @@ export async function translate(text, opts, justDefinition): Promise<GoogleTrans
             console.log(data);
         }
         console.log(url + '?' + qs.stringify(data, { indices: false }));
-        const res = await axios({
-            method: 'get',
-            url: url + '?' + qs.stringify(data, { indices: false })
-        })
+
+        let res = await fetch(url + '?' + qs.stringify(data, { indices: false })).then(result => {
+            return result.json();
+        }).then((resJson) => {
+            return resJson;
+        }).catch((err) => console.log(err));
+
         if (justDefinition) {
-            return remapJustDefinition(res.data)
+            return remapJustDefinition(res)
         }
-        else return remapTranslate(res.data)
+        else return remapTranslate(res)
+
     } catch (err) {
         console.error(err)
         return null
     }
 }
-function remapJustDefinition(data) : GoogleTranslationRes {
-    var resultDefination : GoogleTranslationRes = new GoogleTranslationRes();
+function remapJustDefinition(data): GoogleTranslationRes {
+    var resultDefination: GoogleTranslationRes = new GoogleTranslationRes();
 
     if (data[12]) {
         var definitions = []

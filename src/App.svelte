@@ -14,6 +14,9 @@
   // ipcRenderer.on("focusedToTheMainWindow", (event, message) => {
   //   targetWords = message;
   // });
+
+  console.log(window);
+  
 </script>
 
 <style lang="scss">

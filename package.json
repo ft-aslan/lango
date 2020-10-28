@@ -6,6 +6,7 @@
   "main": "public/build/electron.js",
   "scripts": {
     "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
+    "debug": "concurrently \"npm:svelte-dev\" \"npm:electron-debug\"",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -13,7 +14,8 @@
     "svelte-build": "rollup -c",
     "svelte-dev": "rollup -c -w",
     "svelte-start": "sirv public",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "electron-debug": "./node_modules/.bin/electron-forge-vscode-nix --inspect --remote-debugging-port=9223"
   },
   "keywords": [],
   "author": "alazul",

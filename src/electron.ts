@@ -5,12 +5,15 @@ import {
   globalShortcut,
   clipboard,
 } from "electron";
+
+import settings from "electron-settings";
 import * as path from "path";
 
 // Live Reload
 require("electron-reload")(__dirname, {
   electron: path.join(__dirname, "../../node_modules", ".bin", "electron"),
   awaitWriteFinish: true,
+  hardResetMethod: 'exit'
 });
 
 var mainWindow: BrowserWindow;
@@ -28,9 +31,9 @@ const createWindow = () => {
     height: 600,
     //frame: false,
     webPreferences: {
-      preload: path.join(__dirname, '../../src/preload.js'),
-      nodeIntegration: true,
-      //contextIsolation: true
+      preload: path.join(__dirname, "../../src/preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true
     },
   });
 
@@ -67,9 +70,21 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 
 app.whenReady().then(() => {
-  globalShortcut.register("CommandOrControl+X", () => {
+  globalShortcut.register("CommandOrControl+X+Z", () => {
     mainWindow.show();
     console.log(clipboard.readText());
-    mainWindow.webContents.send('focusedToTheMainWindow', clipboard.readText())    
+    mainWindow.webContents.send("focusedToTheMainWindow", clipboard.readText());
   });
+});
+
+ipcMain.on("get-token-from-settings", (event, arg) => {
+  settings.get(arg as string).then(result => {
+    event.reply("get-token-from-settings-reply", result);
+  });
+});
+ipcMain.on("set-token-in-settings", (event, arg) => {
+  settings.set(arg.targetSettings, arg.value).then(result => {
+
+  });
+
 });

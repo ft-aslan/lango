@@ -19,10 +19,15 @@
   let showSimilarWordsForTranslations = false;
 
   async function translateWords(e) {
+
     let result = await translate(targetWords, { from: "en", to: "tr" }, false);
+console.log(result);
 
     if (result) {
-      if (result.hasOwnProperty("translations") || result.hasOwnProperty("translation")) {
+      if (
+        result.hasOwnProperty("translations") ||
+        result.hasOwnProperty("translation")
+      ) {
         translationResult = result;
       }
     }
@@ -91,9 +96,7 @@
 <top-bar>
   <DropdownMenu placeholder="Translate To" items={languages} />
   <button class="button is-link">
-    <span class="icon is-medium">
-      <i class="fas fa-exchange-alt" />
-    </span>
+    <span class="icon is-medium"> <i class="fas fa-exchange-alt" /> </span>
   </button>
   <DropdownMenu
     justifySelfRight={true}
@@ -109,7 +112,7 @@
   name="main-text-area"
   id="main-text-area"
   cols={30}
-  rows={5}/>
+  rows={5} />
 {#if translationResult != null}
   {#if translationResult.target != null}
     <div id="translations-of">Translations of {targetWords}</div>
