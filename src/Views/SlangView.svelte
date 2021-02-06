@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+
+  import { targetWords } from "../Stores/stores";
+
 
   import { translate } from "../API/google-translate";
   import DropdownMenu from "../Components/DropdownMenu.svelte";
@@ -9,21 +12,23 @@
     SlangDefinitionRes,
   } from "../API/urban-dictionary";
 
-  onMount(async () => {
-    if (targetWords) {
-      await translateWords(null);
-    }
-  });
+
+  onDestroy(async () => {
+        unsubscribe();
+    });
 
   let languages = ["Turkish", "English"];
 
-  export let targetWords;
   let slangDefinitionResult: SlangDefinitionRes[];
 
   let showSimilarWordsForTranslations = false;
 
+  const unsubscribe = targetWords.subscribe(value => {
+		translateWords(null);
+	});
+
   async function translateWords(e) {
-    slangDefinitionResult = await findSlangDefinition(targetWords);
+    slangDefinitionResult = await findSlangDefinition($targetWords);
     console.log(slangDefinitionResult);
   }
 </script>
@@ -92,8 +97,8 @@
 </style>
 
 <textarea
-  bind:value={targetWords}
-  on:change={translateWords}
+  bind:value={$targetWords}
+  on:input={translateWords}
   class="textarea has-fixed-size"
   placeholder="Translate"
   name="main-text-area"
@@ -101,7 +106,7 @@
   cols={30}
   rows={5} />
 {#if slangDefinitionResult != null}
-  <div id="translations-of">Slang definitions of {targetWords}</div>
+  <div id="translations-of">Slang definitions of {$targetWords}</div>
   {#each slangDefinitionResult as definition, i}
     {#if i == 0}
       <div class="translate-result-area">

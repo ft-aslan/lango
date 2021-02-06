@@ -1,16 +1,20 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
+
+  import { targetWords } from "../Stores/stores";
+
 
   import { translate, GoogleTranslationRes } from "../API/google-translate";
   import DropdownMenu from "../Components/DropdownMenu.svelte";
 
-  export let targetWords;
 
-  onMount(async () => {
-    if (targetWords) {
-      await translateWords(null);
-    }
+  onDestroy(async () => {
+    unsubscribe();
   });
+
+  const unsubscribe = targetWords.subscribe(value => {
+		translateWords(null);
+	});
 
   let languages = ["Turkish", "English"];
 
@@ -20,8 +24,7 @@
 
   async function translateWords(e) {
 
-    let result = await translate(targetWords, { from: "en", to: "tr" }, false);
-console.log(result);
+    let result = await translate($targetWords, { from: "en", to: "tr" }, false);
 
     if (result) {
       if (
@@ -105,8 +108,8 @@ console.log(result);
 </top-bar>
 
 <textarea
-  bind:value={targetWords}
-  on:change={translateWords}
+  bind:value={$targetWords}
+  on:input={translateWords}
   class="textarea has-fixed-size"
   placeholder="Translate"
   name="main-text-area"
@@ -115,7 +118,7 @@ console.log(result);
   rows={5} />
 {#if translationResult != null}
   {#if translationResult.target != null}
-    <div id="translations-of">Translations of {targetWords}</div>
+    <div id="translations-of">Translations of {$targetWords}</div>
   {/if}
   <div class="translate-result-area">
     <span class="translate-result-area-header" style="font-weight: bold;">

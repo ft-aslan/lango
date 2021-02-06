@@ -1,40 +1,36 @@
 <script lang="ts">
-  //import {ipcRenderer} from "electron";
-  
-  import TopNav from "./Components/TopNav.svelte";
+    import { targetWords } from "./Stores/stores";
+    import { currentTab } from "./Stores/stores";
 
-  import TranslationView from "./Views/TranslationView.svelte";
-  import DefinitionView from "./Views/DefinitionView.svelte";
-  import SlangView from "./Views/SlangView.svelte";
+    import TopNav from "./Components/TopNav.svelte";
 
-  let currentTab = "translation";
+    import TranslationView from "./Views/TranslationView.svelte";
+    import DefinitionView from "./Views/DefinitionView.svelte";
+    import SlangView from "./Views/SlangView.svelte";
 
-  var targetWords;
+    currentTab.set("translation");
 
-  // ipcRenderer.on("focusedToTheMainWindow", (event, message) => {
-  //   targetWords = message;
-  // });
 
-  console.log(window);
-  
+    (window as any).api.receive("focusedToTheMainWindow", (args) => {
+        $targetWords = args;
+    });
 </script>
 
 <style lang="scss">
-  main {
-    display: grid;
-    row-gap: 5px;
-    padding: 5px;
-  }
+    main {
+        display: grid;
+        row-gap: 5px;
+        padding: 5px;
+    }
 </style>
 
 <main>
-  <TopNav on:tabChange={(e) => (currentTab = e.detail.value)} />
-  {#if currentTab == 'translation'}
-    <TranslationView bind:targetWords />
-  {:else if currentTab == 'definition'}
-    <DefinitionView bind:targetWords />
-  {:else}
-    <SlangView bind:targetWords />
-  {/if}
-
+    <TopNav on:tabChange={(e) => ($currentTab = e.detail.value)} />
+    {#if $currentTab == 'translation'}
+        <TranslationView />
+    {:else if $currentTab == 'definition'}
+        <DefinitionView />
+    {:else}
+        <SlangView />
+    {/if}
 </main>

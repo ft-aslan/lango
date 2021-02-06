@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld(
           }
       },
       receive: (channel, func) => {
-          let validChannels = ["get-token-from-settings-reply"];
+          let validChannels = ["get-token-from-settings-reply", "focusedToTheMainWindow"];
           if (validChannels.includes(channel)) {
               // Deliberately strip event as it includes `sender` 
               ipcRenderer.on(channel, (event, ...args) => func(...args));

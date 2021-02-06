@@ -4,6 +4,8 @@ import {
   ipcMain,
   globalShortcut,
   clipboard,
+  Menu,
+  Tray
 } from "electron";
 
 import settings from "electron-settings";
@@ -24,12 +26,14 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
+var tray : Tray = null;
+
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    //frame: false,
+    // frame: false,
     webPreferences: {
       preload: path.join(__dirname, "../../src/preload.js"),
       nodeIntegration: false,
@@ -37,11 +41,25 @@ const createWindow = () => {
     },
   });
 
+  mainWindow.setAlwaysOnTop(true,"screen-saver");
+
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../index.html"));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  //TRAY
+  tray = new Tray(path.join(__dirname, "../favicon.png"))
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' }
+  ])
+  tray.on("click",() => mainWindow.show())
+  tray.setToolTip('This is my application.')
+  tray.setContextMenu(contextMenu)
 };
 
 // This method will be called when Electron has finished
@@ -70,7 +88,7 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 
 app.whenReady().then(() => {
-  globalShortcut.register("CommandOrControl+X+Z", () => {
+  globalShortcut.register("CommandOrControl+Alt+T", () => {
     mainWindow.show();
     console.log(clipboard.readText());
     mainWindow.webContents.send("focusedToTheMainWindow", clipboard.readText());
