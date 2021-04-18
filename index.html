@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-    <title>Svelte app</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lango</title>
 
     <link rel="icon" type="image/png" href="./favicon.png" />
     <link rel="stylesheet" href="./global.css" />    
@@ -12,8 +12,9 @@
     <link rel="stylesheet" href="./build/bundle.css" />
 
     <script src="https://kit.fontawesome.com/f79b3ee39e.js" crossorigin="anonymous"></script>
-    <script defer src="./build/svelte.js"></script>
   </head>
-
-  <body></body>
+  <body>
+    <div id="app"></div>
+    <script type="module" crossorigin src="/src/svelte.ts"></script>
+  </body>
 </html>

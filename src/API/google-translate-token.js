@@ -1,3 +1,5 @@
+import axios from "axios";
+
 var settings = {
   TKK: "0",
 };
@@ -83,8 +85,8 @@ async function updateTKK(domain) {
     return;
   } else {
     try {
-      const res = await (await fetch(`https://${domain}`)).text();
-      const code = res.match(/tkk:\'(.*?)\'/gi);
+      const res = await axios.get(`https://translate.google.cn`);
+      const code = res.data.match(/tkk:\s?'(.+?)'/i);
       if (code) {
         const TKK = code[0].match(/\d+\.\d+/)[0];
         if (typeof TKK !== "undefined") {
@@ -108,3 +110,5 @@ export default async function getToken(text, domain = "translate.google.cn") {
     throw error;
   }
 }
+
+

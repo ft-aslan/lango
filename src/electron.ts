@@ -34,11 +34,11 @@ const createWindow = () => {
     width: 800,
     height: 600,
     // frame: false,
-    webPreferences: {
-      preload: path.join(__dirname, "../../src/preload.js"),
-      nodeIntegration: false,
-      contextIsolation: true
-    },
+      webPreferences: {
+        preload: path.join(__dirname, "../../src/preload.js"),
+        nodeIntegration: false,
+        contextIsolation: true
+      },
   });
 
   mainWindow.setAlwaysOnTop(true,"screen-saver");

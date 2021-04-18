@@ -1,25 +1,36 @@
 {
-  "name": "lango",
-  "productName": "lango",
-  "version": "0.0.1",
-  "description": "lango",
-  "main": "public/build/electron.js",
+  "name": "langovite",
+  "version": "0.0.0",
   "scripts": {
-    "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
-    "debug": "concurrently \"npm:svelte-dev\" \"npm:electron-debug\"",
+    "start": "concurrently \"npm:dev\" \"electron-forge start\"",
+    "debug": "concurrently \"npm:dev\" \"npm:electron-debug\"",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "svelte-build": "rollup -c",
-    "svelte-dev": "rollup -c -w",
-    "svelte-start": "sirv public",
-    "validate": "svelte-check",
-    "electron-debug": "./node_modules/.bin/electron-forge-vscode-nix --inspect --remote-debugging-port=9223"
+    "make": "electron-forge make"
   },
-  "keywords": [],
-  "author": "alazul",
-  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@sveltejs/vite-plugin-svelte": "next",
+    "concurrently": "^6.0.2",
+    "electron": "^12.0.4",
+    "sass": "^1.32.10",
+    "svelte": "^3.35.0",
+    "svelte-preprocess": "^4.6.9",
+    "typescript": "^4.2.3",
+    "vite": "^2.1.5"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "electron-settings": "^4.0.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "qs": "^6.10.1"
+  },
   "config": {
     "forge": {
       "packagerConfig": {},
@@ -27,7 +38,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "crawler"
+            "name": "langovite"
           }
         },
         {
@@ -46,44 +57,5 @@
         }
       ]
     }
-  },
-  "dependencies": {
-    "axios": "^0.19.2",
-    "electron-json-storage": "^4.2.0",
-    "electron-reload": "^1.5.0",
-    "electron-settings": "^4.0.2",
-    "electron-squirrel-startup": "^1.0.0",
-    "qs": "^6.9.4",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.4.0",
-    "sirv-cli": "^0.4.6"
-  },
-  "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.53",
-    "@electron-forge/maker-deb": "^6.0.0-beta.53",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.53",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.53",
-    "@electron-forge/maker-zip": "^6.0.0-beta.53",
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^7.1.3",
-    "@rollup/plugin-typescript": "^4.1.2",
-    "@tsconfig/svelte": "^1.0.10",
-    "autoprefixer": "^9.8.6",
-    "concurrently": "^5.3.0",
-    "electron": "^10.1.3",
-    "node-sass": "^4.14.1",
-    "rollup": "^1.32.1",
-    "rollup-plugin-livereload": "^1.3.0",
-    "rollup-plugin-node-externals": "^2.2.0",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "rollup-plugin-svelte": "^5.2.3",
-    "rollup-plugin-terser": "^5.3.1",
-    "svelte": "^3.29.0",
-    "svelte-check": "^0.1.59",
-    "svelte-preprocess": "^3.9.12",
-    "tsc-watch": "^4.2.9",
-    "tslib": "^2.0.2",
-    "typescript": "^3.9.7"
   }
 }
