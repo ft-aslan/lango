@@ -1,32 +1,20 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
-
-    import { targetWords } from "../Stores/stores";
-
-    import { translate, GoogleTranslationRes } from "../API/google-translate";
-    import DropdownMenu from "../Components/DropdownMenu.svelte";
-
-    onDestroy(async () => {
-        unsubscribe();
-    });
-
-    let definitionResult: GoogleTranslationRes;
-
-    const unsubscribe = targetWords.subscribe((value) => {
-        defineWords(null);
-    });
-
-    async function defineWords(e) {
-        let result = await translate($targetWords, { from: "en", to: "tr" }, true);
-
-        if (result) {
-            if (result.hasOwnProperty("definitions")) {
-                definitionResult = result;
-            }
-        }
-        console.log(definitionResult);
-    }
+    import { targetWords, currentTranslation } from "../Stores/stores";
 </script>
+
+<div id="definitions-of">Definitions of {$targetWords}</div>
+
+{#each $currentTranslation.definitions as definition}
+    <div class="definition-result-area">
+        <span class="definition-result-area-header">{definition.type}</span>
+        {#each definition.content as line, i}
+            <div class="definition-result-line">
+                <div class="line-count">{i + 1}</div>
+                <span class="definition-word-of-line">{line.definition}</span>
+            </div>
+        {/each}
+    </div>
+{/each}
 
 <style lang="scss">
     textarea {
@@ -39,13 +27,9 @@
         }
     }
 
-    top-bar {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
-    }
     #definitions-of {
         color: white;
+        padding: 5px;
         background-color: rgb(41, 41, 41);
     }
 
@@ -87,30 +71,3 @@
         }
     }
 </style>
-
-<top-bar />
-
-<textarea
-    bind:value={$targetWords}
-    on:input={defineWords}
-    class="textarea has-fixed-size"
-    placeholder="Write a word"
-    name="main-text-area"
-    id="main-text-area"
-    cols={30}
-    rows={5} />
-{#if definitionResult != null}
-    <div id="definition-of">Definitions of {$targetWords}</div>
-
-    {#each definitionResult.definitions as definition}
-        <div class="definition-result-area">
-            <span class="definition-result-area-header">{definition.type}</span>
-            {#each definition.content as line, i}
-                <div class="definition-result-line">
-                    <div class="line-count">{i + 1}</div>
-                    <span class="definition-word-of-line">{line.phrase}</span>
-                </div>
-            {/each}
-        </div>
-    {/each}
-{/if}

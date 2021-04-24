@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { targetWords } from "./Stores/stores";
-    import { currentTab } from "./Stores/stores";
+    import { targetWords, currentTab } from "./Stores/stores";
 
     import TopNav from "./Components/TopNav.svelte";
 
@@ -26,10 +25,8 @@
 
 <main>
     <TopNav on:tabChange={(e) => ($currentTab = e.detail.value)} />
-    {#if $currentTab == 'translation'}
+    {#if $currentTab == 'translation' ||  $currentTab == 'definition'}
         <TranslationView />
-    {:else if $currentTab == 'definition'}
-        <DefinitionView />
     {:else}
         <SlangView />
     {/if}

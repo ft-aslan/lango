@@ -7,8 +7,6 @@
 
   const dispatch = createEventDispatcher();
 
-  console.log(dispatch);
-  
 
   function tabChanged(tab) {
     dispatch("tabChange", {
