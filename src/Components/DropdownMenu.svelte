@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { clickOutside } from "../tools";
+
     import { createEventDispatcher } from "svelte";
 
     let isActive: boolean;
@@ -45,6 +47,8 @@
     style="justify-self:{justifySelfRight ? 'right' : 'left'}"
     class:is-active={isActive}
     class:is-invisible={isInvisible}
+    use:clickOutside
+    on:outclick={() => (isActive = false)}
 >
     <div class="dropdown-trigger">
         <button

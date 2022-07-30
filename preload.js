@@ -33,13 +33,13 @@ const {
     "api", {
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ["get-token-from-settings", "set-token-in-settings"];
+            let validChannels = ["get-token-from-settings", "set-token-in-settings", "request-wordbook-json", "set-wordbook-json"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ["get-token-from-settings-reply", "focusedToTheMainWindow"];
+            let validChannels = ["get-token-from-settings-reply", "focusedToTheMainWindow", "request-wordbook-json"];
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender` 
                 ipcRenderer.on(channel, (event, ...args) => func(...args));

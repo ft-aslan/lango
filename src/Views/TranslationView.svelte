@@ -3,14 +3,17 @@
 
     import { langs } from "../API/languages";
 
-    import { targetWords, currentTab, currentTranslation } from "../Stores/stores";
+    import { targetWords, currentTab, currentTranslation, wordbook } from "../Stores/stores";
 
     import { translate } from "../API/google-translate";
     import DropdownMenu from "../Components/DropdownMenu.svelte";
     import DefinitionView from "./DefinitionView.svelte";
+    import LoadingSpinner from "../Components/LoadingSpinner.svelte";
 
     let translationFrom = { code: "en", language: "English" };
     let translationTo = { code: "tr", language: "Turkish" };
+
+    let isFetching: boolean;
 
     onDestroy(async () => {
         unsubscribeTargetWords();
@@ -22,19 +25,26 @@
 
     let showSimilarWordsForTranslations = false;
 
-    async function translateWords() {
-        if ($targetWords != null && $targetWords.trim() != "") {
-            let result = await translate($targetWords.trim(), {
+    async function translateWords(e?: Event) {
+        let value = e ? (e.target as HTMLInputElement).value : $targetWords;
+        if (value != null && value.trim() != "") {
+            isFetching = true;
+            let result = await translate(value.trim(), {
                 from: translationFrom.code,
                 to: translationTo.code,
             });
+            isFetching = false;
+
+            let foundWord = $wordbook.find((w) => w.text == value);
+            if (foundWord) {
+                wordbook.increaseUsage(foundWord);
+            }
 
             if (result) {
                 if (result.hasOwnProperty("translations") || result.hasOwnProperty("translation")) {
                     $currentTranslation = result;
                 }
             }
-            console.log(result);
         } else {
         }
     }
@@ -57,10 +67,9 @@
             translationTo = translationFrom;
             translationFrom = holder;
             translateWords();
-
         }}
     >
-        <span class="icon is-medium"> <i class="fas fa-exchange-alt" /> </span>
+        <span class="icon is-medium"><i class="fas fa-exchange-alt" /></span>
     </button>
     <DropdownMenu
         isInvisible={$currentTab == "definition"}
@@ -86,18 +95,36 @@
 />
 {#if $currentTab == "translation"}
     {#if $targetWords != ""}
-        <div id="translations-of">Translations of {$targetWords}</div>
+        <div class="translation-header">
+            <div class="text">
+                Translations of {$targetWords}
+            </div>
+            <button
+                class="button is-dark"
+                style="margin-left: auto; margin-right: 10px;"
+                on:click={() => {
+                    let foundWord = $wordbook.find((w) => w.text == $targetWords);
+                    if (!foundWord) {
+                        wordbook.addNewWord({ text: $targetWords, numberOfUsage: 1, creationDate: new Date() });
+                    }
+                }}
+            >
+                <span class="icon is-medium">
+                    <i class="fas fa-plus" />
+                </span>
+            </button>
+        </div>
     {/if}
     {#if $currentTranslation != null}
         <div class="translate-result-area">
-            <span class="translate-result-area-header" style="font-weight: bold;">
-                most common
-            </span>
+            <span class="translate-result-area-header" style="font-weight: bold;">most common</span>
             <span style="font-weight: bold; color:white;">
                 {$currentTranslation.translation}
             </span>
         </div>
-        {#if $currentTranslation.translations}
+        {#if isFetching}
+            <LoadingSpinner />
+        {:else if $currentTranslation.translations}
             {#each $currentTranslation.translations as translation}
                 <div class="translate-result-area">
                     <span class="translate-result-area-header">{translation.type}</span>
@@ -147,10 +174,13 @@
         justify-self: right;
     }
 
-    #translations-of {
+    .translation-header {
         color: white;
         padding: 5px;
         background-color: rgb(41, 41, 41);
+        border-radius: 5px;
+
+        display: flex;
     }
 
     .translate-result-area {
@@ -161,6 +191,9 @@
         background-color: rgb(66, 66, 66);
 
         padding-bottom: 6px;
+
+        padding: 5px;
+        border-radius: 5px;
 
         .translate-result-area-header {
             color: rgb(255, 221, 87);

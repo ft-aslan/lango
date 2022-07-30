@@ -37,3 +37,8 @@ class DefinitionContent {
     example: string;
 }
 
+interface MyWindow extends Window {
+    api: any;
+}
+
+declare var window: MyWindow;

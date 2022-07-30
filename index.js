@@ -9,6 +9,7 @@ const {
     clipboard,
 } = require("electron");
 const path = require("path");
+const fs = require("fs");
 
 function isDev() {
     return !app.isPackaged;
@@ -22,7 +23,7 @@ if (require("electron-squirrel-startup")) {
 
 if (isDev()) {
     try {
-        require("electron-reloader")(module);
+        require("electron-reloader")(module,{ignore:"lango-test-db.json"});
     } catch {}
 }
 
@@ -30,7 +31,7 @@ var mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 800,
+        width: 490,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
@@ -141,3 +142,31 @@ app.whenReady().then(() => {
 ipcMain.on("set-token-in-settings", (event, arg) => {
     settings.set(arg.targetSettings, arg.value).then((result) => {});
 });
+
+ipcMain.on("set-wordbook-json", (event, arg) => {
+    writeFile("./lango-test-db.json", JSON.stringify(arg));
+});
+ipcMain.on("request-wordbook-json", (event, arg) => {
+     //TODO(fatih): if initial load dont give error not its existance
+    let file = readFile("./lango-test-db.json");
+    if (file) {
+        let convertedFile = JSON.parse(file);
+        if (convertedFile) {
+            mainWindow.webContents.send("request-wordbook-json", convertedFile);
+        }
+        else{
+            console.error("Cannot convert Wordbook JSON to Object")
+        }
+    }
+    else{
+       //TODO(fatih): give error if it has to be exist
+    }
+});
+
+const readFile = function (path) {
+    return fs.readFileSync(path, "utf8");
+};
+
+const writeFile = function (path, output) {
+    fs.writeFileSync(path, output);
+};
