@@ -25,7 +25,7 @@
         <a href="/translation">
           <button
             class="button is-dark"
-            on:click={() => selectTab("translation")}
+            onclick={() => selectTab("translation")}
             class:is-warning={$currentTab == "translation"}
             class:is-selected={$currentTab == "translation"}
           >
@@ -40,7 +40,7 @@
         <a href="/definition">
           <button
             class="button is-dark"
-            on:click={() => selectTab("definition")}
+            onclick={() => selectTab("definition")}
             class:is-warning={$currentTab == "definition"}
             class:is-selected={$currentTab == "definition"}
           >
@@ -55,7 +55,7 @@
         <a href="/slang">
           <button
             class="button is-dark"
-            on:click={() => selectTab("slang")}
+            onclick={() => selectTab("slang")}
             class:is-warning={$currentTab == "slang"}
             class:is-selected={$currentTab == "slang"}
           >
@@ -70,7 +70,7 @@
         <a href="/wordbook">
           <button
             class="button is-dark"
-            on:click={() => selectTab("wordbook")}
+            onclick={() => selectTab("wordbook")}
             class:is-warning={$currentTab == "wordbook"}
             class:is-selected={$currentTab == "wordbook"}
           >

@@ -47,15 +47,13 @@
   style="justify-self:{justifySelfRight ? 'right' : 'left'}"
   class:is-active={isActive}
   class:is-invisible={isInvisible}
-  use:clickOutside
-  on:outclick={() => (isActive = false)}
 >
   <div class="dropdown-trigger">
     <button
       class="button is-dark"
       aria-haspopup="true"
       aria-controls="dropdown-menu"
-      on:click={() => (isActive = !isActive)}
+      onclick={() => (isActive = !isActive)}
     >
       <span>{placeholder}</span>
       <span class="icon is-small">
@@ -72,7 +70,7 @@
         bind:value={searchText}
       />
       {#each currentViewedLangs as [code, language]}
-        <div class="dropdown-item" on:click={() => langChanged(code, language)}>
+        <div class="dropdown-item" onclick={() => langChanged(code, language)}>
           {language}
         </div>
       {/each}

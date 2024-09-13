@@ -15,7 +15,7 @@
           <div class="left">
             <button
               class="button is-dark"
-              on:click={() => {
+              onclick={() => {
                 $targetWords = word.text;
                 $currentTab = "translation";
               }}
@@ -26,7 +26,7 @@
             </button>
             <button
               class="button is-dark"
-              on:click={() => {
+              onclick={() => {
                 $targetWords = word.text;
                 $currentTab = "definition";
               }}
@@ -37,7 +37,7 @@
             </button>
             <button
               class="button is-dark"
-              on:click={() => {
+              onclick={() => {
                 $targetWords = word.text;
                 $currentTab = "slang";
               }}
@@ -63,7 +63,7 @@
             </div>
             <button
               class="button is-dark"
-              on:click={() => wordbook.removeWord(word.text)}
+              onclick={() => wordbook.removeWord(word.text)}
             >
               <span class="icon is-small">
                 <i class="fas fa-trash" />

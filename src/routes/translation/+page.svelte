@@ -70,7 +70,7 @@
   <button
     class="button is-link"
     class:is-invisible={$currentTab == "definition"}
-    on:click={() => {
+    onclick={() => {
       let holder = translationTo;
       translationTo = translationFrom;
       translationFrom = holder;
@@ -93,7 +93,7 @@
 
 <textarea
   bind:value={$targetWords}
-  on:change={translateWords}
+  onchange={translateWords}
   class="textarea has-fixed-size"
   placeholder="Translate"
   name="main-text-area"
@@ -110,7 +110,7 @@
       <button
         class="button is-dark"
         style="margin-left: auto; margin-right: 10px;"
-        on:click={() => {
+        onclick={() => {
           let foundWord = $wordbook.find((w) => w.text == $targetWords);
           if (!foundWord) {
             wordbook.addNewWord({
