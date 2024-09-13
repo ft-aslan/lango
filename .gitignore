@@ -1,4 +1,4 @@
-# Logs
+out/# Logs
 logs
 *.log
 npm-debug.log*
@@ -31,7 +31,6 @@ coverage
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-public/build
 
 # Dependency directories
 node_modules/
@@ -86,5 +85,16 @@ typings/
 # Webpack
 .webpack/
 
+# Vite
+.vite/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
 # Electron-Forge
 out/
+
+#Svelte Output
+.output
+.vercel
+/.svelte-kit
+/build

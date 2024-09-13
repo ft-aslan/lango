@@ -1,89 +1,56 @@
 {
-  "name": "lango",
-  "productName": "lango",
-  "version": "0.0.1",
-  "description": "lango",
-  "main": "public/build/electron.js",
+  "name": "langovite",
+  "version": "0.0.0",
+  "main": ".vite/build/main.js",
+  "description": "Translation App",
+  "type": "module",
   "scripts": {
-    "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
-    "debug": "concurrently \"npm:svelte-dev\" \"npm:electron-debug\"",
+    "start": "electron-forge start",
+    "dev:web": "vite dev",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "svelte-build": "rollup -c",
-    "svelte-dev": "rollup -c -w",
-    "svelte-start": "sirv public",
-    "validate": "svelte-check",
-    "electron-debug": "./node_modules/.bin/electron-forge-vscode-nix --inspect --remote-debugging-port=9223"
-  },
-  "keywords": [],
-  "author": "alazul",
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "crawler"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
-  },
-  "dependencies": {
-    "axios": "^0.19.2",
-    "electron-json-storage": "^4.2.0",
-    "electron-reload": "^1.5.0",
-    "electron-settings": "^4.0.2",
-    "electron-squirrel-startup": "^1.0.0",
-    "qs": "^6.9.4",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.4.0",
-    "sirv-cli": "^0.4.6"
+    "lint": "eslint --ext .ts,.tsx ."
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.53",
-    "@electron-forge/maker-deb": "^6.0.0-beta.53",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.53",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.53",
-    "@electron-forge/maker-zip": "^6.0.0-beta.53",
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^7.1.3",
-    "@rollup/plugin-typescript": "^4.1.2",
-    "@tsconfig/svelte": "^1.0.10",
-    "autoprefixer": "^9.8.6",
-    "concurrently": "^5.3.0",
-    "electron": "^10.1.3",
-    "node-sass": "^4.14.1",
-    "rollup": "^1.32.1",
-    "rollup-plugin-livereload": "^1.3.0",
-    "rollup-plugin-node-externals": "^2.2.0",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "rollup-plugin-svelte": "^5.2.3",
-    "rollup-plugin-terser": "^5.3.1",
-    "svelte": "^3.29.0",
-    "svelte-check": "^0.1.59",
-    "svelte-preprocess": "^3.9.12",
-    "tsc-watch": "^4.2.9",
-    "tslib": "^2.0.2",
-    "typescript": "^3.9.7"
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "@sveltejs/adapter-static": "^3.0.4",
+    "@sveltejs/kit": "^2.5.26",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0-next.7",
+    "@tsconfig/svelte": "^5.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^9.0.1",
+    "electron": "32.0.2",
+    "electron-reloader": "^1.2.3",
+    "eslint": "^8.0.1",
+    "eslint-plugin-import": "^2.25.0",
+    "sass": "^1.78.0",
+    "svelte": "^5.0.0-next.244",
+    "svelte-preprocess": "^6.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.4",
+    "vite-plugin-require": "^1.2.14"
+  },
+  "keywords": [],
+  "author": {
+    "name": "ft-aslan",
+    "email": "fthaslncn@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/qs": "^6.9.15",
+    "bulma": "^1.0.2",
+    "electron-squirrel-startup": "^1.0.1",
+    "qs": "^6.13.0"
   }
 }
